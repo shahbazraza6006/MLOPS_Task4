@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Price Predictor</title>
+</head>
+<body>
+    <h1>Car Price Predictor</h1>
+    <form id="predictionForm">
+        <label for="year">Year:</label>
+        <input type="text" id="year" name="year"><br><br>
+        <label for="odometer">Odometer:</label>
+        <input type="text" id="odometer" name="odometer"><br><br>
+        <button type="button" onclick="predict()">Predict Price</button>
+    </form>
+    <div id="predictionResult"></div>
+
+    <script>
+        function predict() {
+            var year = document.getElementById("year").value;
+            var odometer = document.getElementById("odometer").value;
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    year: year,
+                    odometer: odometer
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("predictionResult").innerText = "Predicted Price: $" + data.predicted_price;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
